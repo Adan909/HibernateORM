@@ -82,7 +82,7 @@ public class EstudianteController {
                 mostrarAlerta(Alert.AlertType.INFORMATION,
                         "Éxito", "Estudiante registrado correctamente.");
                 limpiarFormulario();
-                cargarTabla(repo.listar());
+                handleConsultar(); // refresca la tabla en un Task separado
             });
 
             task.setOnFailed(e -> {
