@@ -1,4 +1,35 @@
 package ni.edu.uam.hibernateorm.config;
 
-public class HibernateUtil {
+import ni.edu.uam.hibernateorm.model.Estudiante;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+import java.io.InputStream;
+import java.util.Properties;
+
+public final class HibernateUtil {
+    private static final SessionFactory FACTORY = crear();
+
+    private HibernateUtil() {}
+
+    private static SessionFactory crear() {
+        try (InputStream in = HibernateUtil.class.getClassLoader()
+                .getResourceAsStream("hibernate.properties")) {
+            if (in == null) {
+                throw new IllegalStateException("Falta configuración: hibernate.properties");
+            }
+            Properties p = new Properties();
+            p.load(in);
+            return new Configuration()
+                    .addProperties(p)
+                    .addAnnotatedClass(Estudiante.class)
+                    .buildSessionFactory();
+        } catch (Exception e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    public static SessionFactory getSessionFactory() {
+        return FACTORY;
+    }
 }
